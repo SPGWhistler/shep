@@ -1,4 +1,5 @@
 <?php
+//@TODO Add code in here to setup the composer dependencies.
 /*
  * Install Cli Script
  * This generates a json config file so the application can run.
