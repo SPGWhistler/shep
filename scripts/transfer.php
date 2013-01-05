@@ -90,6 +90,23 @@ function removeDirectories($files)
 	}
 	return $new_files;
 }
+function deleteTree($dir) {
+	static $level = 0;
+	$files = array_diff(scandir($dir), array('.','..'));
+	foreach ($files as $file) {
+		if (is_dir("$dir/$file"))
+		{
+			$level++;
+			deleteTree("$dir/$file");
+			$level--;
+		}
+		else
+		{
+			unlink("$dir/$file");
+		}
+	}
+	return ($level > 0) ? rmdir($dir) : TRUE;
+}
 
 //Get list of files in directories
 $files = array();
@@ -140,6 +157,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $config['endpoint']);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $config['connect_timeout']);
 foreach ($filedb->getAll() as $file)
 {
 	$pathinfo = pathinfo($file);
@@ -165,6 +183,20 @@ foreach ($filedb->getAll() as $file)
 	}
 }
 curl_close($ch);
-//@TODO Remove empty directories
+
+//Clean out the directories
+if ($filedb->length() === 0)
+{
+	$logger->logMessage('all files uploaded successfully - cleaning directories');
+	foreach ($config['new_media_paths'] as $path)
+	{
+		deleteTree($path);
+	}
+}
+else
+{
+	$logger->logMessage('not all files uploaded successfully - not cleaning directories');
+}
+
 $logger->logMessage('exiting');
 ?>
