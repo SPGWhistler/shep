@@ -39,6 +39,9 @@ class Shep_Txt_Logger
 			//Unix time stamp
 			date('U') .
 			$this->config['seperator'] .
+			//Process Id
+			getmypid() .
+			$this->config['seperator'] .
 			//Message
 			'"' . $message . '"' .
 			//End of line
