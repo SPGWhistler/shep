@@ -125,11 +125,14 @@ $filedb->save();
 $new_db_length = $filedb->length();
 
 //If the db length has changed, exit so we can wait for all files to be added.
-if ($old_db_length !== $new_db_length)
+if ($old_db_length < $new_db_length)
 {
 	$logger->logMessage("found new files - exiting");
 	exit(0);
 }
+//If old length is > new length then we have a sync
+//issue - so we'll just continue and check each file as we
+//loop over it below.
 
 //Start transfer now
 $logger->logMessage("starting transfer of " . $new_db_length . " new files");
@@ -139,23 +142,29 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 foreach ($filedb->getAll() as $file)
 {
-	$logger->logMessage('uploading: ' . $file);
-	//@TODO
-	//- Check to make sure file exists
-	//- Get file name
-	curl_setopt($ch, CURLOPT_POSTFIELDS, array('name' => 'file', 'file' => '@' . $file));
+	$pathinfo = pathinfo($file);
+	$name =  basename($file, (isset($pathinfo['extension'])) ? '.' . $pathinfo['extension'] : '');
+	$logger->logMessage('uploading: ' . $name . ' at: ' . $file);
+	if (!file_exists($file))
+	{
+		$logger->logMessage('file doesnt exist anymore: ' . $name . ' at: ' . $file);
+		$filedb->remove($file);
+		continue;
+	}
+	curl_setopt($ch, CURLOPT_POSTFIELDS, array('name' => $name, 'file' => '@' . $file));
 	$result = curl_exec($ch);
 	if ($result)
 	{
-		$logger->logMessage('success: ' . $file);
+		$logger->logMessage('success: ' . $name . ' at: ' . $file);
 		$filedb->remove($file);
 		unlink($file);
 	}
 	else
 	{
-		$logger->logMessage('error: ' . $file);
+		$logger->logMessage('error: ' . $name . ' at: ' . $file);
 	}
 }
 curl_close($ch);
+//@TODO Remove empty directories
 $logger->logMessage('exiting');
 ?>
