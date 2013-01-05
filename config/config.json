@@ -2,6 +2,11 @@
 	"db": {
 		"database_name": "shep"
 	},
+	"logger": {
+		"seperator": ",",
+		"date_format": "YmdHis",
+		"eol": "\n"
+	},
 	"queue": {
 		"collection_name": "queue"
 	},
