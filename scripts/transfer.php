@@ -91,7 +91,7 @@ function removeDirectories($files)
 	return $new_files;
 }
 
-//Get list of files in directorys
+//Get list of files in directories
 $files = array();
 foreach ($config['new_media_paths'] as $path)
 {
@@ -124,17 +124,26 @@ $filedb->save();
 //Get length of db.
 $new_db_length = $filedb->length();
 
+//If the db length has changed, exit so we can wait for all files to be added.
 if ($old_db_length !== $new_db_length)
 {
-	//If the db length has changed, exit so we can wait for all files to be added.
-	$logger->logMessage("found new files, waiting for more");
+	$logger->logMessage("found new files - exiting");
 	exit(0);
 }
-else
-{
-	//If not, start transfer now.
-	$logger->logMessage("starting transfer of " . $new_db_length . " new files");
-}
+
+//Start transfer now
+$logger->logMessage("starting transfer of " . $new_db_length . " new files");
+/*
+$ch = curl_init();
+
+$data = array('name' => 'Foo', 'file' => '@/home/user/test.png');
+
+curl_setopt($ch, CURLOPT_URL, 'http://localhost/upload.php');
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+curl_exec($ch);
+*/
 //$logger->logMessage($filedb->length() . " entries in the db.");
 //sleep(300);
 //$logger->logMessage('exiting');
