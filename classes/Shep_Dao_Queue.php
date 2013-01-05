@@ -11,7 +11,7 @@ class Shep_Dao_Queue
 
 	public function getCollection()
 	{
-		if (!$this->collection)
+		if ($this->collection === NULL)
 		{
 			$this->collection = $this->db->getCollection($this->config['collection_name']);
 		}

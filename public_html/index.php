@@ -22,7 +22,7 @@ $app->post('/add', function () use ($app) {
 		{
 			case UPLOAD_ERR_OK: //No error
 				$config = new Shep_Config();
-				$db = new Shep_Db_Mongo($config->get('db'));
+				$db = new Shep_Db_Mongo($config->get('db_mongo'));
 				$dao = new Shep_Dao_Queue($config->get('queue'), $db);
 				if ($dao->addToQueue($file))
 				{

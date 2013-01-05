@@ -18,7 +18,7 @@ class Shep_Txt_Logger
 
 	public function getHandle()
 	{
-		if (!$this->handle)
+		if ($this->handle === NULL)
 		{
 			$this->handle = fopen($this->path, 'a');
 		}

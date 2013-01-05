@@ -12,7 +12,7 @@ class Shep_Db_Mongo
 
 	protected function _getConnection()
 	{
-		if (!$this->connection)
+		if ($this->connection === NULL)
 		{
 			$this->connection = new MongoClient();
 		}
@@ -21,7 +21,7 @@ class Shep_Db_Mongo
 
 	protected function _getDatabase()
 	{
-		if (!$this->database)
+		if ($this->database === NULL)
 		{
 			$this->database = $this->_getConnection()->selectDB($this->config['database_name']);
 		}

@@ -1,49 +1,100 @@
 <?php
 class Shep_Db_File
 {
-	protected $path = NULL;
-	protected $handle = NULL;
+	protected $contents = NULL;
 
-	public function __construct($config, $path)
+	public function __construct($config)
 	{
 		$this->config = $config;
-		$this->path = $path;
 	}
 
-	public function setHandle($handle)
+	protected function _loadData()
 	{
-		$this->handle = $handle;
-		return TRUE;
-	}
-
-	public function getHandle()
-	{
-		if (!$this->handle)
+		if ($this->contents === NULL)
 		{
-			$this->handle = fopen($this->path, 'a');
+			$this->contents = array();
+			$lines = file(SHEP_BASE_PATH . $this->config['file_path']);
+			if (is_array($lines))
+			{
+				foreach ($lines as $line)
+				{
+					$this->add($line, FALSE);
+				}
+			}
 		}
-		return $this->handle;
 	}
 
-	public function logMessage($message)
+	public function getAll($reload = FALSE)
 	{
-		return fwrite($this->getHandle(), $this->formatMessage($message));
+		if ($reload === TRUE)
+		{
+			$this->contents = NULL;
+		}
+		$this->_loadData();
+		return $this->contents;
 	}
 
-	public function formatMessage($message)
+	public function length()
 	{
-		$message =
-			//Human date format
-			date($this->config['date_format']) .
-			$this->config['seperator'] .
-			//Unix time stamp
-			date('U') .
-			$this->config['seperator'] .
-			//Message
-			'"' . $message . '"' .
-			//End of line
-			$this->config['eol'];
-		return $message;
+		$this->_loadData();
+		return count($this->contents);
+	}
+
+	public function add($data, $save = TRUE)
+	{
+		if ($this->contents === NULL)
+		{
+			$this->_loadData();
+		}
+		$newline = trim($data);
+		if ($newline !== "")
+		{
+			$this->contents[] = $newline;
+			if ($save === TRUE)
+			{
+				return $this->save();
+			}
+			else
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	public function find($data)
+	{
+		$this->_loadData();
+		return array_search($data, $this->contents);
+	}
+
+	public function remove($data, $save = TRUE)
+	{
+		$this->_loadData();
+		$index = $this->find($data);
+		if($index !== FALSE)
+		{
+			array_splice($this->contents, $index, 1);
+			if ($save === TRUE)
+			{
+				return $this->save();
+			}
+			else
+			{
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	public function save()
+	{
+		$this->_loadData();
+		if(file_put_contents(SHEP_BASE_PATH . $this->config['file_path'], implode($this->config['eol'], $this->contents) . $this->config['eol']))
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
 }
 ?>

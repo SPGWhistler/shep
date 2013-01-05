@@ -1,6 +1,10 @@
 {
-	"db": {
+	"db_mongo": {
 		"database_name": "shep"
+	},
+	"db_file": {
+		"file_path": "logs/db_file",
+		"eol": "\n"
 	},
 	"logger": {
 		"seperator": ",",

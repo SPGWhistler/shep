@@ -11,7 +11,7 @@ class Shep_Config
 
 	public function get($key = '')
 	{
-		if (!$this->config)
+		if ($this->config === NULL)
 		{
 			$config = json_decode(file_get_contents($this->config_file_path), TRUE);
 			$last_json_error = json_last_error();
