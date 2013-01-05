@@ -55,7 +55,7 @@ $app->post('/add', function () use ($app) {
 
 $app->get('/queue', function () use ($app) {
 	$config = new Shep_Config();
-	$db = new Shep_Db_Mongo($config->get('db'));
+	$db = new Shep_Db_Mongo($config->get('db_mongo'));
 	$dao = new Shep_Dao_Queue($config->get('queue'), $db);
 	generateOutput($dao->getQueue(), 200);
 });
