@@ -17,6 +17,7 @@
 	"transfer": {
 		"pid_path": "logs/transfer.pid",
 		"error_log_path": "logs/transfer_error_log",
+		"endpoint": "http://192.168.11.6/~tpetty/shep/index.php/add",
 		"new_media_paths": [
 			"/home/tpetty/test_media_dir1/",
 			"/home/tpetty/test_media_dir2/"

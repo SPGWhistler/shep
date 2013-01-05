@@ -133,18 +133,29 @@ if ($old_db_length !== $new_db_length)
 
 //Start transfer now
 $logger->logMessage("starting transfer of " . $new_db_length . " new files");
-/*
 $ch = curl_init();
-
-$data = array('name' => 'Foo', 'file' => '@/home/user/test.png');
-
-curl_setopt($ch, CURLOPT_URL, 'http://localhost/upload.php');
+curl_setopt($ch, CURLOPT_URL, $config['endpoint']);
 curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-curl_exec($ch);
-*/
-//$logger->logMessage($filedb->length() . " entries in the db.");
-//sleep(300);
-//$logger->logMessage('exiting');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+foreach ($filedb->getAll() as $file)
+{
+	$logger->logMessage('uploading: ' . $file);
+	//@TODO
+	//- Check to make sure file exists
+	//- Get file name
+	curl_setopt($ch, CURLOPT_POSTFIELDS, array('name' => 'file', 'file' => '@' . $file));
+	$result = curl_exec($ch);
+	if ($result)
+	{
+		$logger->logMessage('success: ' . $file);
+		$filedb->remove($file);
+		unlink($file);
+	}
+	else
+	{
+		$logger->logMessage('error: ' . $file);
+	}
+}
+curl_close($ch);
+$logger->logMessage('exiting');
 ?>
