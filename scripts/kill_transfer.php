@@ -5,7 +5,7 @@ require '../classes/autoloader.php';
 $cfg = new Shep_Config();
 $config = $cfg->get('transfer');
 
-$lock = fopen(SHEP_BASE_DIR . $config['pid_path'], 'c+');
+$lock = fopen(SHEP_BASE_PATH . $config['pid_path'], 'c+');
 if (flock($lock, LOCK_EX | LOCK_NB)) {
 	die('process not running');
 }

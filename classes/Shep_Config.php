@@ -6,7 +6,7 @@ class Shep_Config
 
 	public function __construct()
 	{
-		$this->config_file_path = SHEP_BASE_DIR . 'config/config.json';
+		$this->config_file_path = SHEP_BASE_PATH . 'config/config.json';
 	}
 
 	public function get($key = '')

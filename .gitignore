@@ -1,2 +1,3 @@
 vendor
-transfer.pid
+logs/transfer.pid
+logs/transfer_error_log
