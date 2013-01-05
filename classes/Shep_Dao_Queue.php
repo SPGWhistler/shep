@@ -20,7 +20,15 @@ class Shep_Dao_Queue
 
 	public function addToQueue($file_document)
 	{
-		return $this->getCollection()->insert($file_document);
+		try
+		{
+			$this->getCollection()->insert($file_document);
+		}
+		catch (Exception $e)
+		{
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 	public function getQueue()

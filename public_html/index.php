@@ -26,8 +26,14 @@ $app->post('/add', function () use ($app) {
 				$config = new Shep_Config();
 				$db = new Shep_Db_Mongo($config->get('db'));
 				$dao = new Shep_Dao_Queue($config->get('queue'), $db);
-				s($dao->addToQueue($file));
-				generateOutput("Accepted", 202);
+				if ($dao->addToQueue($file))
+				{
+					generateOutput("Accepted", 202);
+				}
+				else
+				{
+					generateOutput("Error adding file to queue.", 400);
+				}
 				break;
 			case UPLOAD_ERR_INI_SIZE:
 				generateOutput("The uploaded file exceeds the upload_max_filesize directive in php.ini.", 413);
@@ -53,8 +59,7 @@ $app->get('/queue', function () use ($app) {
 	$config = new Shep_Config();
 	$db = new Shep_Db_Mongo($config->get('db'));
 	$dao = new Shep_Dao_Queue($config->get('queue'), $db);
-	s($dao->getQueue());
-	generateOutput("", 200);
+	generateOutput($dao->getQueue(), 200);
 });
 
 function generateOutput($object, $status = 200)
