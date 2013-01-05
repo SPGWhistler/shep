@@ -1,6 +1,52 @@
 {
-    "hash": "490cc9d9fd8bac48ef7474cdb187af3b",
+    "hash": "3c60a4d93702a5cc3a097ff4b6fec24e",
     "packages": [
+        {
+            "name": "raveren/kint",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/raveren/kint.git",
+                "reference": "0f6e5640957e1c9a8bba192eee86ba8d0e682488"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/raveren/kint/archive/0f6e5640957e1c9a8bba192eee86ba8d0e682488.zip",
+                "reference": "0f6e5640957e1c9a8bba192eee86ba8d0e682488",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "time": "2013-01-16 15:18:51",
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Kint.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rokas Šleinius",
+                    "homepage": "https://github.com/raveren"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/raveren/kint/contributors"
+                }
+            ],
+            "description": "Kint - debugging helper for PHP developers",
+            "homepage": "https://github.com/raveren/kint",
+            "keywords": [
+                "php",
+                "debug",
+                "kint"
+            ]
+        },
         {
             "name": "slim/slim",
             "version": "2.2.0",
@@ -50,7 +96,7 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "raveren/kint": 20
+    }
 }
