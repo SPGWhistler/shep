@@ -59,8 +59,83 @@ if (!isset($options['D']))
 	pcntl_signal(SIGHUP, SIG_IGN);
 }
 
-// do some long running work
-$logger->logMessage($filedb->length() . " entries in the db.");
+function glob_recursive($pattern, $flags = 0) {
+	$files = glob($pattern, $flags);
+	if (is_array($files))
+	{
+		$dirs = glob(dirname($pattern) . '/*', GLOB_ONLYDIR|GLOB_NOSORT);
+		if (is_array($dirs))
+		{
+			foreach ($dirs as $dir)
+			{
+				$files = array_merge($files, glob_recursive($dir.'/'.basename($pattern), $flags));
+			}
+		}
+	}
+	else
+	{
+		$files = array();
+	}
+	return $files;
+}
+function removeDirectories($files)
+{
+	$new_files = array();
+	foreach ($files as $file)
+	{
+		if (!is_dir($file))
+		{
+			$new_files[] = $file;
+		}
+	}
+	return $new_files;
+}
+
+//Get list of files in directorys
+$files = array();
+foreach ($config['new_media_paths'] as $path)
+{
+	if (!is_dir($path))
+	{
+		$logger->logMessage($path . " is not a directory.");
+		die($path . " is not a directory.");
+	}
+	$files = array_merge($files, glob_recursive($path . "*"));
+}
+$files = removeDirectories($files);
+
+//If no files found, exit.
+if (!count($files))
+{
+	$logger->logMessage('no files found');
+	exit(0);
+}
+
+//Get length of db.
+$old_db_length = $filedb->length();
+
+//Add files to db, making sure db only contains unique entries.
+foreach ($files as $file)
+{
+	$filedb->add($file, FALSE, TRUE);
+}
+$filedb->save();
+
+//Get length of db.
+$new_db_length = $filedb->length();
+
+if ($old_db_length !== $new_db_length)
+{
+	//If the db length has changed, exit so we can wait for all files to be added.
+	$logger->logMessage("found new files, waiting for more");
+	exit(0);
+}
+else
+{
+	//If not, start transfer now.
+	$logger->logMessage("starting transfer of " . $new_db_length . " new files");
+}
+//$logger->logMessage($filedb->length() . " entries in the db.");
 //sleep(300);
-$logger->logMessage('exiting');
+//$logger->logMessage('exiting');
 ?>

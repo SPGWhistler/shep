@@ -40,7 +40,7 @@ class Shep_Db_File
 		return count($this->contents);
 	}
 
-	public function add($data, $save = TRUE)
+	public function add($data, $save = TRUE, $unique = FALSE)
 	{
 		if ($this->contents === NULL)
 		{
@@ -49,6 +49,11 @@ class Shep_Db_File
 		$newline = trim($data);
 		if ($newline !== "")
 		{
+			if ($unique && $this->find($data) !== FALSE)
+			{
+				//The same entry already exists, return true like we added it.
+				return TRUE;
+			}
 			$this->contents[] = $newline;
 			if ($save === TRUE)
 			{

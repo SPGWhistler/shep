@@ -18,7 +18,8 @@
 		"pid_path": "logs/transfer.pid",
 		"error_log_path": "logs/transfer_error_log",
 		"new_media_paths": [
-			"/Users/tpetty/Pictures/Eye-Fi"
+			"/home/tpetty/test_media_dir1/",
+			"/home/tpetty/test_media_dir2/"
 		]
 	}
 }
