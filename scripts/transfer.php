@@ -157,6 +157,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $config['endpoint']);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FAILONERROR, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $config['connect_timeout']);
 foreach ($filedb->getAll() as $file)
 {

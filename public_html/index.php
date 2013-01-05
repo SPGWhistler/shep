@@ -26,7 +26,14 @@ $app->post('/add', function () use ($app) {
 				$dao = new Shep_Dao_Queue($config->get('queue'), $db);
 				if ($dao->addToQueue($file))
 				{
-					generateOutput("Accepted", 202);
+					if (move_uploaded_file($file['tmp_name'], '/home/tpetty/' . $file['name']))
+					{
+						generateOutput("Accepted", 202);
+					}
+					else
+					{
+						generateOutput("Error moving file.", 400);
+					}
 				}
 				else
 				{
