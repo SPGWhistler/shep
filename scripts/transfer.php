@@ -1,0 +1,3 @@
+<?php
+//Transfer Cli Script
+?>
