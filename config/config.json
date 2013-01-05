@@ -6,13 +6,16 @@
 		"file_path": "logs/db_file",
 		"eol": "\n"
 	},
-	"logger": {
+	"txt_logger": {
 		"seperator": ",",
 		"date_format": "YmdHis",
 		"eol": "\n"
 	},
-	"queue": {
+	"dao_queue": {
 		"collection_name": "queue"
+	},
+	"add": {
+		"upload_path": "/home/tpetty/uploads/"
 	},
 	"transfer": {
 		"pid_path": "logs/transfer.pid",

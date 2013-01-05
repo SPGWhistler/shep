@@ -21,12 +21,13 @@ $app->post('/add', function () use ($app) {
 		switch ($file['error'])
 		{
 			case UPLOAD_ERR_OK: //No error
-				$config = new Shep_Config();
-				$db = new Shep_Db_Mongo($config->get('db_mongo'));
-				$dao = new Shep_Dao_Queue($config->get('queue'), $db);
+				$cfg = new Shep_Config();
+				$config = $cfg->get('add');
+				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
+				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
 				if ($dao->addToQueue($file))
 				{
-					if (move_uploaded_file($file['tmp_name'], '/home/tpetty/' . $file['name']))
+					if (move_uploaded_file($file['tmp_name'], $config['upload_path'] . $file['name']))
 					{
 						generateOutput("Accepted", 202);
 					}
@@ -61,9 +62,9 @@ $app->post('/add', function () use ($app) {
 });
 
 $app->get('/queue', function () use ($app) {
-	$config = new Shep_Config();
-	$db = new Shep_Db_Mongo($config->get('db_mongo'));
-	$dao = new Shep_Dao_Queue($config->get('queue'), $db);
+	$cfg = new Shep_Config();
+	$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
+	$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
 	generateOutput($dao->getQueue(), 200);
 });
 

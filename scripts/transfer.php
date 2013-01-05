@@ -17,7 +17,7 @@ if (!flock($lock, LOCK_EX | LOCK_NB)) {
 }
 
 //Initialize objects
-$logger = new Shep_Txt_Logger($cfg->get('logger'), SHEP_BASE_PATH . $config['error_log_path']);
+$logger = new Shep_Txt_Logger($cfg->get('txt_logger'), SHEP_BASE_PATH . $config['error_log_path']);
 $filedb = new Shep_Db_File($cfg->get('db_file'));
 
 //Get command line options
