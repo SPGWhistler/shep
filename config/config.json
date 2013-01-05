@@ -1,4 +1,8 @@
 {
 	"db": {
+		"database_name": "shep"
+	},
+	"queue": {
+		"collection_name": "queue"
 	}
 }

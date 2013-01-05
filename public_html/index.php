@@ -1,4 +1,10 @@
 <?php
+function __autoload($class_name) {
+	include "../classes/" . $class_name . '.php';
+}
+$dao = new shep_queue_dao();
+echo "success";
+exit;
 require 'vendor/autoload.php';
 
 $app = new \Slim\Slim();
