@@ -1,15 +1,13 @@
 <?php
-class shep_mongo extends shep_base
+class Shep_Db_Mongo
 {
-	private $config = NULL;
 	private $connection = NULL;
 	private $database = NULL;
 	private $collections = array();
 
-	public function __construct()
+	public function __construct($config)
 	{
-		parent::__construct();
-		$this->config = $this->getConfig()->get('db');
+		$this->config = $config;
 	}
 
 	protected function _getConnection()

@@ -1,5 +1,5 @@
 <?php
-class shep_config extends shep_base
+class Shep_Config
 {
 	protected $config_file_path = '../config/config.json';
 	protected $config = NULL;
@@ -9,7 +9,7 @@ class shep_config extends shep_base
 		if (!$this->config)
 		{
 			$config = json_decode(file_get_contents($this->config_file_path), TRUE);
-			if (is_array($config)
+			if (is_array($config))
 			{
 				$this->config = $config;
 			}

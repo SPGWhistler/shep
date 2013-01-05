@@ -1,11 +1,8 @@
 <?php
-function __autoload($class_name) {
-	include "../classes/" . $class_name . '.php';
-}
-$dao = new shep_queue_dao();
-echo "success";
-exit;
 require 'vendor/autoload.php';
+spl_autoload_register(function ($class) {
+	include '../classes/' . $class . '.php';
+});
 
 $app = new \Slim\Slim();
 
@@ -22,10 +19,14 @@ $app = new \Slim\Slim();
 $app->post('/add', function () use ($app) {
 	if (is_array($_FILES))
 	{
-		$file = array_shift($_FILES); //Get onlyt first file
+		$file = array_shift($_FILES); //Get only the first file
 		switch ($file['error'])
 		{
 			case UPLOAD_ERR_OK: //No error
+				$config = new Shep_Config();
+				$db = new Shep_Db_Mongo($config->get('db'));
+				$dao = new Shep_Dao_Queue($config->get('queue'), $db);
+				s($dao->addToQueue($file));
 				generateOutput("Accepted", 202);
 				break;
 			case UPLOAD_ERR_INI_SIZE:
@@ -46,6 +47,14 @@ $app->post('/add', function () use ($app) {
 	{
 		generateOutput("No file uploaded.", 400);
 	}
+});
+
+$app->get('/queue', function () use ($app) {
+	$config = new Shep_Config();
+	$db = new Shep_Db_Mongo($config->get('db'));
+	$dao = new Shep_Dao_Queue($config->get('queue'), $db);
+	s($dao->getQueue());
+	generateOutput("", 200);
 });
 
 function generateOutput($object, $status = 200)
