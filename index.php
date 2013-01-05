@@ -3,6 +3,16 @@ require 'vendor/autoload.php';
 
 $app = new \Slim\Slim();
 
+/**
+ * Add a file.
+ * This requires the following php.ini settings:
+ * file_uploads = true
+ * upload_max_filesize = 1G
+ * post_max_size = 1G
+ * memory_limit = 1G
+ * max_input_time = 300
+ * max_execution_time = 300
+ */
 $app->post('/add', function () use ($app) {
 	if (is_array($_FILES))
 	{
