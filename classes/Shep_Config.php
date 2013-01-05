@@ -1,8 +1,13 @@
 <?php
 class Shep_Config
 {
-	protected $config_file_path = '../config/config.json';
+	protected $config_file_path = NULL;
 	protected $config = NULL;
+
+	public function __construct()
+	{
+		$this->config_file_path = SHEP_BASE_DIR . 'config/config.json';
+	}
 
 	public function get($key = '')
 	{

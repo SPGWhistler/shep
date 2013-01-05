@@ -1,8 +1,6 @@
 <?php
 require 'vendor/autoload.php';
-spl_autoload_register(function ($class) {
-	include '../classes/' . $class . '.php';
-});
+require '../classes/autoloader.php';
 
 $app = new \Slim\Slim();
 

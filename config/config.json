@@ -4,5 +4,8 @@
 	},
 	"queue": {
 		"collection_name": "queue"
+	},
+	"transfer": {
+		"pid_path": "transfer.pid"
 	}
 }
