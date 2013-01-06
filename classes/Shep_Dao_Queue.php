@@ -31,6 +31,19 @@ class Shep_Dao_Queue
 		return TRUE;
 	}
 
+	public function removeFromQueue($file_document)
+	{
+		try
+		{
+			$this->getCollection()->remove($file_document);
+		}
+		catch (Exception $e)
+		{
+			return FALSE;
+		}
+		return TRUE;
+	}
+
 	public function updateQueue($file_document)
 	{
 		if (isset($file_document['_id']))
@@ -47,9 +60,9 @@ class Shep_Dao_Queue
 		return FALSE;
 	}
 
-	public function getQueue()
+	public function getQueue($fields = array())
 	{
-		$cursor = $this->getCollection()->find();
+		$cursor = $this->getCollection()->find($fields);
 		return iterator_to_array($cursor);
 	}
 }
