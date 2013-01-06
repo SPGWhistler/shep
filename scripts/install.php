@@ -75,6 +75,20 @@ $config['dao_queue'] = array(
 getValue("Collection name", $config['dao_queue']['collection_name']);
 fwrite(STDOUT, "Done.\n");
 
+//php_flickr
+fwrite(STDOUT, "Configuring Php Flickr Class...\n");
+$config['php_flickr'] = array(
+	'api_key' => '',
+	'secret' => '',
+	'auth_token' => ''
+);
+fwrite(STDOUT, "You can generate a flickr api key and secret at: http://www.flickr.com/services/apps/create/apply/\n");
+getValue("Flickr Api Key", $config['php_flickr']['api_key']);
+getValue("Flickr Secret", $config['php_flickr']['secret']);
+$url = "http://www.flickr.com/services/auth/?api_key=" . $config['php_flickr']['api_key'] . "&perms=delete" . "&api_sig=" . md5($config['php_flickr']['secret'] . "api_key" . $config['php_flickr']['api_key'] . "permsdelete");
+fwrite(STDOUT, "To get your auth token, go to: " . $url . "\n");
+getValue("Flickr Auth Token", $config['php_flickr']['auth_token']);
+
 //add
 fwrite(STDOUT, "Configuring Add Endpoint...\n");
 $config['add'] = array(
@@ -103,6 +117,7 @@ getValue("Connect Timeout", $config['transfer']['connect_timeout']);
 getArray("New Media Paths", $config['transfer']['new_media_paths']);
 fwrite(STDOUT, "Done.\n");
 
+//Review New Config File
 $answer = "No";
 getValue("Do you want to review the new configuration before it's written", $answer);
 if (strtolower(substr($answer, 0, 1)) === "y")
@@ -117,6 +132,7 @@ if (strtolower(substr($answer, 0, 1)) === "y")
 	}
 }
 
+//Write New Config File
 fwrite(STDOUT, "Writing configuration file.\n");
 $config = json_encode($config);
 $res = file_put_contents($config_file_path, $config);
