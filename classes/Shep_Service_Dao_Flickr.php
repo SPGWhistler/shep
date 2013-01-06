@@ -54,5 +54,12 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 	public function isUploaded($fileObject)
 	{
 	}
+
+	public static function getSupportedFileTypes()
+	{
+		return array(
+			'image/jpeg',
+		);
+	}
 }
 ?>

@@ -79,14 +79,10 @@ if (!isset($options['D']))
 
 $queue = $dao->getQueue();
 //print_r($queue);
-$finfo = finfo_open(FILEINFO_MIME_TYPE);
 foreach ($queue as $file)
 {
 	if (isset($file['path']) && file_exists($file['path']))
 	{
-		//@TODO Use this code after upload to set mime type in queue.
-		//Upload script should then only get items from queue that have a mime type the service supports.
-		echo finfo_file($finfo, $file['path']) . "\n";
 		/*
 		echo "Uploading file\n";
 		$flickr->uploadFile($file);

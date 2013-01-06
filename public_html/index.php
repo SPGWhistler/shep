@@ -33,10 +33,14 @@ $app->post('/add', function () use ($app) {
 				$config = $cfg->get('add');
 				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-				if (move_uploaded_file($file['tmp_name'], $config['upload_path'] . $file['name']))
+				$supported_types = array_merge(Shep_Service_Dao_Flickr::getSupportedFileTypes());
+				$finfo = finfo_open(FILEINFO_MIME_TYPE);
+				$fileType = finfo_file($finfo, $file['tmp_name']);
+				if (array_search($fileType, $supported_types) !== FALSE && move_uploaded_file($file['tmp_name'], $config['upload_path'] . basename($file['tmp_name'])))
 				{
 					$file = array(
-						'path' => $config['upload_path'] . $file['name'],
+						'path' => $config['upload_path'] . basename($file['tmp_name']),
+						'name' => $file['name'],
 						'size' => $file['size'],
 						'uploaded' => FALSE,
 					);
