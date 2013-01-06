@@ -19,17 +19,18 @@ class Shep_Service_Dao_Youtube extends Shep_Service_Dao
 	{
 		if (isset($fileObject['path']) && file_exists($fileObject['path']))
 		{
+			$fileObject['type'] = (isset($fileObject['type'])) ? $fileObject['type'] : 'video/quicktime';
 			$fileObject['name'] = (isset($fileObject['name'])) ? $fileObject['name'] : '';
 			$fileObject['title'] = (isset($fileObject['title'])) ? $fileObject['title'] : $fileObject['name'];
 			$fileObject['description'] = (isset($fileObject['description'])) ? $fileObject['description'] : '';
-			$fileObject['category'] = (isset($fileObject['category'])) ? $fileObject['category'] : '';
+			$fileObject['category'] = (isset($fileObject['category'])) ? $fileObject['category'] : 'People';
 			$fileObject['tags'] = (isset($fileObject['tags'])) ? $fileObject['tags'] : '';
 
 			$result = FALSE;
 			$myVideoEntry = new Zend_Gdata_YouTube_VideoEntry();
 			$filesource = $this->getYoutube()->newMediaFileSource($fileObject['path']);
-			$filesource->setContentType('video/quicktime'); //@TODO
-			$filesource->setSlug($fileObject['path']); //@TODO
+			$filesource->setContentType($fileObject['type']);
+			$filesource->setSlug($fileObject['path']); //@TODO Needed?
 			$myVideoEntry->setMediaSource($filesource);
 			$myVideoEntry->setVideoTitle($fileObject['title']);
 			$myVideoEntry->setVideoDescription($fileObject['description']);
@@ -38,8 +39,12 @@ class Shep_Service_Dao_Youtube extends Shep_Service_Dao
 			$uploadUrl = 'http://uploads.gdata.youtube.com/feeds/api/users/default/uploads';
 			try {
 				$newEntry = $this->getYoutube()->insertEntry($myVideoEntry, $uploadUrl, 'Zend_Gdata_YouTube_VideoEntry');
+				$newEntry->setMajorProtocolVersion(2);
 				$result = $newEntry->getVideoId();
-			} catch (Exception $e) {
+			} catch (Zend_Gdata_App_HttpException $httpException) {
+				$this->last_error = $httpException->getRawResponseBody();
+			} catch (Zend_Gdata_App_Exception $e) {
+				$this->last_error = $e->getMessage();
 			}
 			if ($result !== FALSE)
 			{

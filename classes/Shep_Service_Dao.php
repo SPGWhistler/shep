@@ -1,6 +1,8 @@
 <?php
 abstract class Shep_Service_Dao
 {
+	protected $last_error = NULL;
+
 	public function __construct($config, $dao)
 	{
 		$this->config = $config;
@@ -14,5 +16,10 @@ abstract class Shep_Service_Dao
 	abstract public function isUploaded($fileObject);
 
 	abstract public static function getSupportedFileTypes();
+
+	public function getLastError()
+	{
+		return $this->last_error;
+	}
 }
 ?>

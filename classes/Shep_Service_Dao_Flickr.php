@@ -40,6 +40,10 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 				$this->dao->updateQueue($fileObject);
 				return TRUE;
 			}
+			else
+			{
+				$this->last_error = $this->getFlickr()->getErrorMsg();
+			}
 		}
 		return FALSE;
 	}

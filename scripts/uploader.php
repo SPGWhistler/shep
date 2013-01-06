@@ -93,7 +93,7 @@ foreach ($queue as $id=>$file)
 		}
 		else
 		{
-			$logger->logMessage('error uploading ' . $file['name'] . ' (' . $id . ')');
+			$logger->logMessage('error uploading ' . $file['name'] . ' (' . $id . ') Message: ' . $service->getLastError());
 		}
 	}
 }
