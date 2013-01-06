@@ -95,7 +95,7 @@ class Shep_Db_File
 	public function save()
 	{
 		$this->_loadData();
-		if(file_put_contents(SHEP_BASE_PATH . $this->config['file_path'], implode($this->config['eol'], $this->contents) . $this->config['eol']))
+		if(file_put_contents(SHEP_BASE_PATH . $this->config['file_path'], implode("\n", $this->contents) . "\n"))
 		{
 			return TRUE;
 		}

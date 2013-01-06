@@ -52,23 +52,19 @@ fwrite(STDOUT, "Done.\n");
 //db_file
 fwrite(STDOUT, "Configuring File Database...\n");
 $config['db_file'] = array(
-	'file_path' => 'logs/db_file',
-	'eol' => '\n'
+	'file_path' => 'logs/db_file'
 );
 getValue("Path to the file database", $config['db_file']['file_path']);
-getValue("End of line character", $config['db_file']['eol']);
 fwrite(STDOUT, "Done.\n");
 
 //txt_logger
 fwrite(STDOUT, "Configuring Text Logger Class...\n");
 $config['txt_logger'] = array(
 	'seperator' => ',',
-	'date_format' => 'YmdHis',
-	'eol' => '\n'
+	'date_format' => 'YmdHis'
 );
 getValue("Seperator character", $config['txt_logger']['seperator']);
 getValue("Date format to use", $config['txt_logger']['date_format']);
-getValue("End of line character", $config['txt_logger']['eol']);
 fwrite(STDOUT, "Done.\n");
 
 //dao_queue

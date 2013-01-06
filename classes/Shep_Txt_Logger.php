@@ -45,7 +45,7 @@ class Shep_Txt_Logger
 			//Message
 			'"' . $message . '"' .
 			//End of line
-			$this->config['eol'];
+			"\n";
 		return $message;
 	}
 }
