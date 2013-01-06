@@ -12,7 +12,7 @@
 $config_file_path = 'config/config.json';
 
 //Get command line options
-$options = getopt('i:');
+$options = getopt('i:a');
 
 fwrite(STDOUT, "This will create a new config.json file.\n\n");
 
@@ -64,6 +64,14 @@ $config = array(
 		'collection_name' => array(
 			'value' => "queue",
 			'desc' => "Collection name",
+		),
+	),
+	'service_list' => array(
+		'services' => array(
+			'value' => array(
+				"Shep_Service_Dao_Flickr",
+			),
+			'desc' => "List of Shep_Service_Dao classes you want to use",
 		),
 	),
 	'php_flickr' => array(
@@ -185,10 +193,18 @@ exit(0);
 
 function getValue($description, $default)
 {
+	global $options;
 	if (!is_array($default))
 	{
 		fwrite(STDOUT, $description . " [" . $default . "]: ");
-		$line = trim(fgets(STDIN));
+		if (!isset($options['a']))
+		{
+			$line = trim(fgets(STDIN));
+		}
+		else
+		{
+			$line = "";
+		}
 		if ($line !== "")
 		{
 			settype($line, gettype($default));
@@ -207,7 +223,14 @@ function getValue($description, $default)
 		fwrite(STDOUT, $description);
 		$new = array();
 		do {
-			$line = trim(fgets(STDIN));
+			if (!isset($options['a']))
+			{
+				$line = trim(fgets(STDIN));
+			}
+			else
+			{
+				$line = "";
+			}
 			if ($line !== "")
 			{
 				$new[] = $line;

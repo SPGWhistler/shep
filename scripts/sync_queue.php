@@ -18,7 +18,6 @@ require_once 'Zend/Loader.php';
 $cfg = new Shep_Config();
 $db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 $dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-$flickr = new Shep_Service_Dao_Flickr($cfg->get('php_flickr'), $dao);
 
 $addcfg = $cfg->get('add');
 
@@ -41,26 +40,29 @@ $files = glob($addcfg['upload_path'] . "*");
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $supported_types = array_merge(Shep_Service_Dao_Flickr::getSupportedFileTypes());
 $count = 0;
-foreach ($files as $file)
+if (is_array($files))
 {
-	if ($dao->getQueue(array('path' => $file)) === array())
+	foreach ($files as $file)
 	{
-		//File exists but is not in queue.
-		$fileType = finfo_file($finfo, $file);
-		if (array_search($fileType, $supported_types) !== FALSE)
+		if ($dao->getQueue(array('path' => $file)) === array())
 		{
-			$fileObject = array(
-				'path' => $file,
-				'name' => basename($file),
-				'size' => filesize($file),
-				'uploaded' => FALSE,
-			);
-			$dao->addToQueue($fileObject);
-			$count++;
+			//File exists but is not in queue.
+			$fileType = finfo_file($finfo, $file);
+			if (array_search($fileType, $supported_types) !== FALSE)
+			{
+				$fileObject = array(
+					'path' => $file,
+					'name' => basename($file),
+					'size' => filesize($file),
+					'uploaded' => FALSE,
+				);
+				$dao->addToQueue($fileObject);
+				$count++;
+			}
 		}
 	}
+	echo $count . " files added to queue.\n";
 }
-echo $count . " files added to queue.\n";
 
 $queue = $dao->getQueue();
 echo "The queue now has " . count($queue) . " files in it.\n";

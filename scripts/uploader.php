@@ -82,10 +82,12 @@ foreach ($queue as $file)
 {
 	if (isset($file['path']) && file_exists($file['path']))
 	{
+		/*
 		echo "Uploading file\n";
 		$flickr->uploadFile($file);
 		echo "done.\n";
 		exit;
+		*/
 	}
 }
 

@@ -33,18 +33,18 @@ $app->post('/add', function () use ($app) {
 				$config = $cfg->get('add');
 				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-				//@TODO This supported_types logic needs to be abstracted to a class
-				//that can 1 - get if a file is supported at all, and 2 - tell me what class supports it.
-				$supported_types = array_merge(Shep_Service_Dao_Flickr::getSupportedFileTypes());
+				$list = new Shep_Service_List($cfg->get('service_list'), $db);
 				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				$fileType = finfo_file($finfo, $file['tmp_name']);
-				if (array_search($fileType, $supported_types) !== FALSE && move_uploaded_file($file['tmp_name'], $config['upload_path'] . basename($file['tmp_name'])))
+				$serviceName = $list->isSupportedFileType($fileType);
+				if ($serviceName !== FALSE && move_uploaded_file($file['tmp_name'], $config['upload_path'] . basename($file['tmp_name'])))
 				{
 					$file = array(
 						'path' => $config['upload_path'] . basename($file['tmp_name']),
 						'name' => $file['name'],
 						'size' => $file['size'],
 						'uploaded' => FALSE,
+						'service' => $serviceName,
 					);
 					if ($dao->addToQueue($file))
 					{
