@@ -21,7 +21,19 @@ class Shep_Config
 			}
 			if (is_array($config))
 			{
-				$this->config = $config;
+				$newconfig = array();
+				foreach ($config as $group=>$options)
+				{
+					foreach ($options as $option=>$data)
+					{
+						if ($option === 'desc')
+						{
+							continue;
+						}
+						$newconfig[$group][$option] = $data['value'];
+					}
+				}
+				$this->config = $newconfig;
 			}
 			else
 			{
