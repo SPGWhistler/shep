@@ -27,8 +27,12 @@ class Shep_Config
 			{
 				$this->config = array();
 			}
+			if (!isset($this->config['global']))
+			{
+				$this->config['global'] = array();
+			}
 		}
-		return ($key !== '' && isset($this->config[$key])) ? $this->config[$key] : array();
+		return ($key !== '' && isset($this->config[$key])) ? array_merge($this->config['global'], $this->config[$key]) : $this->config['global'];
 	}
 }
 ?>
