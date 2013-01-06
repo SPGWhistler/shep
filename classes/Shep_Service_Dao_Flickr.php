@@ -17,7 +17,8 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 	{
 		if (isset($fileObject['path']) && file_exists($fileObject['path']))
 		{
-			$fileObject['title'] = (isset($fileObject['title'])) ? $fileObject['title'] : NULL;
+			$fileObject['name'] = (isset($fileObject['name'])) ? $fileObject['name'] : NULL;
+			$fileObject['title'] = (isset($fileObject['title'])) ? $fileObject['title'] : $fileObject['name'];
 			$fileObject['description'] = (isset($fileObject['description'])) ? $fileObject['description'] : NULL;
 			$fileObject['tags'] = (isset($fileObject['tags'])) ? $fileObject['tags'] : NULL;
 			$fileObject['public_allowed'] = (isset($fileObject['public_allowed'])) ? $fileObject['public_allowed'] : $this->config['public_allowed'];
@@ -36,7 +37,7 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 			{
 				$fileObject['upload_token'] = $result;
 				$fileObject['uploaded'] = TRUE;
-				$this->db->updateQueue($fileObject);
+				$this->dao->updateQueue($fileObject);
 				return TRUE;
 			}
 		}

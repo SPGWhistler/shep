@@ -1,10 +1,10 @@
 <?php
 abstract class Shep_Service_Dao
 {
-	public function __construct($config, $db)
+	public function __construct($config, $dao)
 	{
 		$this->config = $config;
-		$this->db = $db;
+		$this->dao = $dao;
 	}
 
 	abstract public function uploadFile($fileObject);
