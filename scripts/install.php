@@ -113,7 +113,7 @@ $config = array(
 		),
 	),
 	'add' => array(
-		'media_path' => array(
+		'upload_path' => array(
 			'value' => "/home/tpetty/media_queue/",
 			'desc' => "Path for media files when they are uploaded.",
 		),
