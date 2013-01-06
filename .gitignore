@@ -1,3 +1,4 @@
 vendor
 logs/transfer.pid
 logs/transfer_error_log
+config/config.json
