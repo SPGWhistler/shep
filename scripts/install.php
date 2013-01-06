@@ -80,6 +80,18 @@ $config = array(
 			'value' => "",
 			'desc' => "Flickr Auth Token",
 		),
+		'public_allowed' => array(
+			'value' => 0,
+			'desc' => "Images should be visible to the public by default (0 or 1)",
+		),
+		'friend_allowed' => array(
+			'value' => 1,
+			'desc' => "Images should be visible to friends by default (0 or 1)",
+		),
+		'family_allowed' => array(
+			'value' => 1,
+			'desc' => "Images should be visible to family by default (0 or 1)",
+		),
 	),
 	'zend_gdata' => array(
 		'desc' => "You can generate a YouTube developer key and client id at: https://code.google.com/apis/youtube/dashboard/\nTo get your YouTube session token, please go to: http://127.0.0.1/~tpetty/shep/ytAuthStart/",
@@ -101,9 +113,9 @@ $config = array(
 		),
 	),
 	'add' => array(
-		'upload_path' => array(
-			'value' => "/home/tpetty/uploads/",
-			'desc' => "Path for new uploads",
+		'media_path' => array(
+			'value' => "/home/tpetty/media_queue/",
+			'desc' => "Path for media files when they are uploaded.",
 		),
 	),
 	'transfer' => array(

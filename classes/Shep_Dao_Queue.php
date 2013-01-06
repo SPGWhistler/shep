@@ -31,6 +31,22 @@ class Shep_Dao_Queue
 		return TRUE;
 	}
 
+	public function updateQueue($file_document)
+	{
+		if (isset($file_document['_id']))
+		{
+			try
+			{
+				$this->getCollection()->update(array('_id' => $file_document['_id']), $file_document);
+				return TRUE;
+			}
+			catch (Exception $e)
+			{
+			}
+		}
+		return FALSE;
+	}
+
 	public function getQueue()
 	{
 		$cursor = $this->getCollection()->find();

@@ -74,21 +74,6 @@ if (!isset($options['D']))
 	pcntl_signal(SIGHUP, SIG_IGN);
 }
 
-//Don't forget that this must work with videos too.
-
-/*
-$phpFlickr_config = $cfg->get('php_flickr');
-$f = new phpFlickr($phpFlickr_config['api_key'], $phpFlickr_config['secret']);
-$f->setToken($phpFlickr_config['auth_token']);
-*/
-
-//$result = $f->async_upload('/home/tpetty/uploads/IMG_4024.JPG', 'test_async_upload', 'test async description', NULL, 0, 1, 1);
-/*
-$status = $f->photos_upload_checkTickets($result);
-if (isset($status[0]['photoid']))
-*/
-
-//function sync_upload ($photo, $title = null, $description = null, $tags = null, $is_public = null, $is_friend = null, $is_family = null) {
 
 $zg_config = $cfg->get('zend_gdata');
 Zend_Loader::loadClass('Zend_Gdata_YouTube');

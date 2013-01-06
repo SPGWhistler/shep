@@ -33,20 +33,25 @@ $app->post('/add', function () use ($app) {
 				$config = $cfg->get('add');
 				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-				if ($dao->addToQueue($file))
+				if (move_uploaded_file($file['tmp_name'], $config['upload_path'] . $file['name']))
 				{
-					if (move_uploaded_file($file['tmp_name'], $config['upload_path'] . $file['name']))
+					$file = array(
+						'path' => $config['upload_path'] . $file['name'],
+						'size' => $file['size'],
+						'uploaded' => FALSE,
+					);
+					if ($dao->addToQueue($file))
 					{
 						generateOutput("Accepted", 202);
 					}
 					else
 					{
-						generateOutput("Error moving file.", 400);
+						generateOutput("Error adding file to queue.", 400);
 					}
 				}
 				else
 				{
-					generateOutput("Error adding file to queue.", 400);
+					generateOutput("Error moving file.", 400);
 				}
 				break;
 			case UPLOAD_ERR_INI_SIZE:
