@@ -1,7 +1,7 @@
 <?php
 class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 {
-	$this->flickr = NULL;
+	protected $flickr = NULL;
 
 	public function getFlickr()
 	{
@@ -20,13 +20,18 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 			$fileObject['title'] = ($fileObject['title']) ?: NULL;
 			$fileObject['description'] = ($fileObject['description']) ?: NULL;
 			$fileObject['tags'] = ($fileObject['tags']) ?: NULL;
-			$result = $this->getFlickr()->async_upload($fileObject['path'],
+			$fileObject['public_allowed'] = ($fileObject['public_allowed']) ?: $this->config['public_allowed'];
+			$fileObject['friend_allowed'] = ($fileObject['friend_allowed']) ?: $this->config['friend_allowed'];
+			$fileObject['family_allowed'] = ($fileObject['family_allowed']) ?: $this->config['family_allowed'];
+			$result = $this->getFlickr()->async_upload(
+				$fileObject['path'],
 				$fileObject['title'],
 				$fileObject['description'],
 				$fileObject['tags'],
-				$this->config['public_allowed'],
-				$this->config['friend_allowed'],
-				$this->config['family_allowed']);
+				$fileObject['public_allowed'],
+				$fileObject['friend_allowed'],
+				$fileObject['family_allowed']
+			);
 			if ($result !== FALSE)
 			{
 				//Add upload status to item.

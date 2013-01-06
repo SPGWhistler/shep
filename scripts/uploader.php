@@ -28,6 +28,9 @@ if (!flock($lock, LOCK_EX | LOCK_NB)) {
 
 //Initialize objects
 $logger = new Shep_Txt_Logger($cfg->get('txt_logger'), SHEP_BASE_PATH . $config['error_log_path']);
+$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
+$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
+$flickr = new Shep_Service_Dao_Flickr($cfg->get('php_flickr'), $dao);
 
 //Set timezone
 if ($config['timezone'] !== "PHP")
@@ -74,12 +77,25 @@ if (!isset($options['D']))
 	pcntl_signal(SIGHUP, SIG_IGN);
 }
 
+$queue = $dao->getQueue();
+//print_r($queue);
+foreach ($queue as $file)
+{
+	if (isset($fileObject['path']) && file_exists($fileObject['path']))
+	{
+		echo "Uploading file\n";
+		$flickr->uploadFile($fileObject);
+		echo "done.\n";
+	}
+}
 
+/*
 $zg_config = $cfg->get('zend_gdata');
 Zend_Loader::loadClass('Zend_Gdata_YouTube');
 $httpClient = Zend_Gdata_AuthSub::getHttpClient($zg_config['yt_session_token']);
 $yt = new Zend_Gdata_YouTube($httpClient, $zg_config['application_id'], $zg_config['client_id'], $zg_config['developer_key']);
 $yt->setMajorProtocolVersion(2);
+*/
 /*
 //$videoFeed = $yt->getVideoFeed(Zend_Gdata_YouTube::VIDEO_URI);
 $videoFeed = $yt->getuserUploads('default');
@@ -128,7 +144,7 @@ function printVideoEntry($videoEntry)
   }
 }
 */
-
+/*
 $myVideoEntry = new Zend_Gdata_YouTube_VideoEntry();
 $filesource = $yt->newMediaFileSource('/home/tpetty/uploads/MVI_4023.MOV');
 $filesource->setContentType('video/quicktime');
@@ -147,6 +163,7 @@ try {
 } catch (Zend_Gdata_App_Exception $e) {
 	echo $e->getMessage();
 }
+*/
 
 $logger->logMessage('exiting');
 ?>
