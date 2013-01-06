@@ -185,7 +185,7 @@ foreach ($filedb->getAll() as $file)
 	curl_setopt($ch, CURLOPT_POSTFIELDS, array('name' => $name, 'file' => '@' . $file));
 	$result = curl_exec($ch);
 	$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	if ($status_code === '202')
+	if ((int)$status_code === 202)
 	{
 		$logger->logMessage('success: ' . $name . ' at: ' . $file);
 		$filedb->remove($file);

@@ -63,6 +63,7 @@ class Shep_Service_Dao_Youtube extends Shep_Service_Dao
 	public static function getSupportedFileTypes()
 	{
 		return array(
+			'video/quicktime',
 		);
 	}
 }

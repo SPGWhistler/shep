@@ -70,6 +70,7 @@ $config = array(
 		'services' => array(
 			'value' => array(
 				"Shep_Service_Dao_Flickr",
+				"Shep_Service_Dao_Youtube",
 			),
 			'desc' => "List of Shep_Service_Dao classes you want to use",
 		),
