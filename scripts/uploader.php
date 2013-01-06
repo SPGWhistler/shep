@@ -81,15 +81,10 @@ $queue = $dao->getQueue();
 //print_r($queue);
 foreach ($queue as $file)
 {
-	if (isset($fileObject['path']))
-	{
-		print_r($fileObject);
-		exit;
-	}
-	if (isset($fileObject['path']) && file_exists($fileObject['path']))
+	if (isset($file['path']) && file_exists($file['path']))
 	{
 		echo "Uploading file\n";
-		$flickr->uploadFile($fileObject);
+		$flickr->uploadFile($file);
 		echo "done.\n";
 		exit;
 	}
