@@ -45,6 +45,7 @@ $app->post('/add', function () use ($app) {
 						'size' => $file['size'],
 						'uploaded' => FALSE,
 						'service' => $serviceName,
+						'type' => $fileType,
 					);
 					if ($dao->addToQueue($file))
 					{

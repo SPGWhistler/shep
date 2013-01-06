@@ -18,6 +18,7 @@ require_once 'Zend/Loader.php';
 $cfg = new Shep_Config();
 $db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 $dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
+$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $dao);
 
 $addcfg = $cfg->get('add');
 
@@ -36,9 +37,9 @@ foreach ($queue as $key=>$file)
 }
 echo $count . " entries removed from queue.\n";
 
+$unsupported_files = array();
 $files = glob($addcfg['upload_path'] . "*");
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
-$supported_types = array_merge(Shep_Service_Dao_Flickr::getSupportedFileTypes());
 $count = 0;
 if (is_array($files))
 {
@@ -48,16 +49,26 @@ if (is_array($files))
 		{
 			//File exists but is not in queue.
 			$fileType = finfo_file($finfo, $file);
-			if (array_search($fileType, $supported_types) !== FALSE)
+			$serviceName = $list->isSupportedFileType($fileType);
+			if ($serviceName !== FALSE)
 			{
 				$fileObject = array(
 					'path' => $file,
 					'name' => basename($file),
 					'size' => filesize($file),
-					'uploaded' => FALSE,
+					'uploaded' => FALSE, //@TODO Should actually run a search via service.
+					'service' => $serviceName,
+					'type' => $fileType,
 				);
 				$dao->addToQueue($fileObject);
 				$count++;
+			}
+			else
+			{
+				$unsupported_files[] = array(
+					'name' => basename($file),
+					'type' => $fileType,
+				);
 			}
 		}
 	}
@@ -66,4 +77,14 @@ if (is_array($files))
 
 $queue = $dao->getQueue();
 echo "The queue now has " . count($queue) . " files in it.\n";
+
+if (count($unsupported_files))
+{
+	echo "Also found the following files that did not have a supporting service:\n";
+	echo "File Name		Mime Type\n";
+	foreach ($unsupported_files as $file)
+	{
+		echo $file['name'] . "			" . $file['type'] . "\n";
+	}
+}
 ?>
