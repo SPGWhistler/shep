@@ -2,10 +2,12 @@
 class Shep_Service_List
 {
 	protected $types = NULL;
+	protected $services = array();
 
-	public function __construct($config, $db)
+	public function __construct($config, $cfg, $db)
 	{
 		$this->config = $config;
+		$this->cfg = $cfg;
 		$this->db = $db;
 	}
 
@@ -34,6 +36,16 @@ class Shep_Service_List
 
 	public function getService($service = '')
 	{
+		if ($service === '')
+		{
+			return FALSE;
+		}
+		if (!isset($this->services[$service]))
+		{
+			$config_key = strtolower(substr($service, 5));
+			$this->services[$service] = new $service($this->cfg->get($config_key), $this->db);
+		}
+		return $this->services[$service];
 	}
 }
 ?>

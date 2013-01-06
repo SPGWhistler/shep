@@ -74,7 +74,7 @@ $config = array(
 			'desc' => "List of Shep_Service_Dao classes you want to use",
 		),
 	),
-	'php_flickr' => array(
+	'service_dao_flickr' => array(
 		'desc' => "You can generate a flickr api key and secret at: http://www.flickr.com/services/apps/create/apply/",
 		'api_key' => array(
 			'value' => "",
@@ -101,7 +101,7 @@ $config = array(
 			'desc' => "Images should be visible to family by default (0 or 1)",
 		),
 	),
-	'zend_gdata' => array(
+	'service_dao_youtube' => array(
 		'desc' => "You can generate a YouTube developer key and client id at: https://code.google.com/apis/youtube/dashboard/\nTo get your YouTube session token, please go to: http://127.0.0.1/~tpetty/shep/ytAuthStart/",
 		'application_id' => array(
 			'value' => "shep-shepUploader-0.1",

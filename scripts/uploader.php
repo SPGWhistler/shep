@@ -30,7 +30,7 @@ if (!flock($lock, LOCK_EX | LOCK_NB)) {
 $logger = new Shep_Txt_Logger($cfg->get('txt_logger'), SHEP_BASE_PATH . $config['error_log_path']);
 $db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 $dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-$flickr = new Shep_Service_Dao_Flickr($cfg->get('php_flickr'), $dao);
+$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $db);
 
 //Set timezone
 if ($config['timezone'] !== "PHP")
@@ -82,12 +82,11 @@ foreach ($queue as $file)
 {
 	if (isset($file['path']) && file_exists($file['path']))
 	{
-		/*
 		echo "Uploading file\n";
-		$flickr->uploadFile($file);
+		$service = $list->getService($file['service']);
+		$service->uploadFile($file);
 		echo "done.\n";
 		exit;
-		*/
 	}
 }
 

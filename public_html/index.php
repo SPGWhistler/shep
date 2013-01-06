@@ -33,7 +33,7 @@ $app->post('/add', function () use ($app) {
 				$config = $cfg->get('add');
 				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
 				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-				$list = new Shep_Service_List($cfg->get('service_list'), $db);
+				$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $db);
 				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				$fileType = finfo_file($finfo, $file['tmp_name']);
 				$serviceName = $list->isSupportedFileType($fileType);
