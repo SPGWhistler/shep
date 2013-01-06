@@ -92,6 +92,7 @@ fwrite(STDOUT, "Configuring Transfer Script...\n");
 $config['transfer'] = array(
 	'pid_path' => 'logs/transfer.pid',
 	'error_log_path' => 'logs/transfer_error_log',
+	'timezone' => 'America/New_York',
 	'endpoint' => 'http://127.0.0.1/~tpetty/shep/index.php/add',
 	'connect_timeout' => 2,
 	'new_media_paths' => array(
@@ -100,6 +101,7 @@ $config['transfer'] = array(
 );
 getValue("Process id path", $config['transfer']['pid_path']);
 getValue("Error log path", $config['transfer']['error_log_path']);
+getValue("Timezone (enter 'PHP' to use the php default value)", $config['transfer']['timezone']);
 getValue("Endpoint Url", $config['transfer']['endpoint']);
 getValue("Connect Timeout", $config['transfer']['connect_timeout']);
 getArray("New Media Paths", $config['transfer']['new_media_paths']);

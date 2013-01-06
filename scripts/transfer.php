@@ -20,6 +20,12 @@ if (!flock($lock, LOCK_EX | LOCK_NB)) {
 $logger = new Shep_Txt_Logger($cfg->get('txt_logger'), SHEP_BASE_PATH . $config['error_log_path']);
 $filedb = new Shep_Db_File($cfg->get('db_file'));
 
+//Set timezone
+if ($config['timezone'] !== "PHP")
+{
+	date_default_timezone_set($config['timezone']);
+}
+
 //Get command line options
 $options = getopt('D');
 
