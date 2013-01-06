@@ -4,13 +4,32 @@
  * This generates a json config file so the application can run.
  */
 
+$config_file_path = 'config/config.json';
+
 function getValue($description, &$default)
 {
 	fwrite(STDOUT, $description . " [" . $default . "]: ");
 	$line = trim(fgets(STDIN));
 	if ($line !== "")
 	{
+		settype($line, gettype($default));
 		$default = $line;
+	}
+}
+function getArray($description, &$default)
+{
+	fwrite(STDOUT, $description . " [" . print_r($default, TRUE) . "]: ");
+	$new = array();
+	do {
+		$line = trim(fgets(STDIN));
+		if ($line !== "")
+		{
+			$new[] = $line;
+		}
+	} while ($line !== "");
+	if (count($new))
+	{
+		$default = $new;
 	}
 }
 
@@ -83,8 +102,31 @@ getValue("Process id path", $config['transfer']['pid_path']);
 getValue("Error log path", $config['transfer']['error_log_path']);
 getValue("Endpoint Url", $config['transfer']['endpoint']);
 getValue("Connect Timeout", $config['transfer']['connect_timeout']);
+getArray("New Media Paths", $config['transfer']['new_media_paths']);
 fwrite(STDOUT, "Done.\n");
 
+$answer = "No";
+getValue("Do you want to review the new configuration before it's written", $answer);
+if (strtolower(substr($answer, 0, 1)) === "y")
+{
+	fwrite(STDOUT, print_r($config, TRUE));
+	$answer = "Yes";
+	getValue("Does this look good", $answer);
+	if (strtolower(substr($answer, 0, 1)) === "n")
+	{
+		fwrite(STDOUT, "Not writing configuration file.\n");
+		exit(1);
+	}
+}
+
+fwrite(STDOUT, "Writing configuration file.\n");
 $config = json_encode($config);
-print_r($config);
+$res = file_put_contents($config_file_path, $config);
+if ($res === FALSE)
+{
+	fwrite(STDOUT, "Error - Could not write configuration file.\n");
+	exit(1);
+}
+fwrite(STDOUT, "Done.\n");
+exit(0);
 ?>
