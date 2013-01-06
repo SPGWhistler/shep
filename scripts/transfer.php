@@ -2,6 +2,11 @@
 /*
  * Transfer Cli Script
  * This script transfers media files to the server via http.
+ *
+ * Usage:
+ * php transfer.php [-D]
+ *
+ * -D Do not daemonize.
  */
 
 require '../classes/autoloader.php';

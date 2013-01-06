@@ -2,6 +2,11 @@
 /*
  * Uploader Cli Script
  * This script uploads media files to a third party service via http.
+ *
+ * Usage:
+ * php uploader.php [-D]
+ *
+ * -D Do not daemonize.
  */
 
 require '../classes/autoloader.php';

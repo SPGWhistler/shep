@@ -2,6 +2,11 @@
 /*
  * Install Cli Script
  * This generates a json config file so the application can run.
+ *
+ * Usage:
+ * php install.php [-i /path/to/file]
+ *
+ * -i [file] Specifies a file to import the default configuration from. Must be json.
  */
 
 $config_file_path = 'config/config.json';
