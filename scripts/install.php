@@ -85,8 +85,7 @@ $config['php_flickr'] = array(
 fwrite(STDOUT, "You can generate a flickr api key and secret at: http://www.flickr.com/services/apps/create/apply/\n");
 getValue("Flickr Api Key", $config['php_flickr']['api_key']);
 getValue("Flickr Secret", $config['php_flickr']['secret']);
-$url = "http://www.flickr.com/services/auth/?api_key=" . $config['php_flickr']['api_key'] . "&perms=delete" . "&api_sig=" . md5($config['php_flickr']['secret'] . "api_key" . $config['php_flickr']['api_key'] . "permsdelete");
-fwrite(STDOUT, "To get your auth token, go to: " . $url . "\n");
+fwrite(STDOUT, "TODO: Instructions on how to get this token.\n");
 getValue("Flickr Auth Token", $config['php_flickr']['auth_token']);
 
 //add
