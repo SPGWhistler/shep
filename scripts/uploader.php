@@ -11,6 +11,11 @@
 
 require '../classes/autoloader.php';
 
+//Make sure we can find the Zend stuff
+$path = '../classes/';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+require_once 'Zend/Loader.php';
+
 //Get configuration
 $cfg = new Shep_Config();
 $config = $cfg->get('uploader');
@@ -71,17 +76,24 @@ if (!isset($options['D']))
 
 //Don't forget that this must work with videos too.
 
+/*
 $phpFlickr_config = $cfg->get('php_flickr');
 $f = new phpFlickr($phpFlickr_config['api_key'], $phpFlickr_config['secret']);
 $f->setToken($phpFlickr_config['auth_token']);
+*/
 
-$result = $f->async_upload('/home/tpetty/uploads/IMG_4024.JPG', 'test_async_upload', 'test async description', NULL, 0, 1, 1);
+//$result = $f->async_upload('/home/tpetty/uploads/IMG_4024.JPG', 'test_async_upload', 'test async description', NULL, 0, 1, 1);
 /*
 $status = $f->photos_upload_checkTickets($result);
 if (isset($status[0]['photoid']))
 */
 
 //function sync_upload ($photo, $title = null, $description = null, $tags = null, $is_public = null, $is_friend = null, $is_family = null) {
+
+$zg_config = $cfg->get('zend_gdata');
+Zend_Loader::loadClass('Zend_Gdata_YouTube');
+$httpClient = Zend_Gdata_AuthSub::getHttpClient($zg_config['yt_session_token']);
+$yt = new Zend_Gdata_YouTube($httpClient, $zg_config['application_id'], $zg_config['client_id'], $zg_config['developer_key']);
 
 $logger->logMessage('exiting');
 ?>

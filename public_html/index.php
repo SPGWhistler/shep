@@ -1,6 +1,14 @@
 <?php
+//Composer autoloader
 require 'vendor/autoload.php';
+
+//My autoloader
 require '../classes/autoloader.php';
+
+//Zend autoloader
+$path = '../classes/';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+require_once 'Zend/Loader.php';
 
 $app = new \Slim\Slim();
 
@@ -68,13 +76,48 @@ $app->get('/queue', function () use ($app) {
 	generateOutput($dao->getQueue(), 200);
 });
 
-function generateOutput($object, $status = 200)
+$app->get('/ytAuthStart', function() use ($app) {
+	session_start();
+	$next = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . '/ytAuthReturn';
+	$scope = 'http://gdata.youtube.com';
+	$secure = false;
+	$session = true;
+	$url = Zend_Gdata_AuthSub::getAuthSubTokenUri($next, $scope, $secure, $session);
+	$app->response()->redirect($url, 303);
+});
+
+$app->get('/ytAuthReturn', function() use ($app) {
+	$token = $app->request()->params('token');
+	if ($token !== NULL)
+	{
+		$sessionToken = Zend_Gdata_AuthSub::getAuthSubSessionToken($token);
+		$output = "Here is your YouTube session token.<br>\n";
+		$output .= "Copy the following string:<br>\n";
+		$output .= "<br>\n" . $sessionToken . "<br>\n";
+		$output .= "<br>\n<br>\n";
+		$output .= "Paste this string into the install script when prompted for it.<br>\n";
+		generateOutput($output, 200, 'html');
+		return;
+	}
+	generateOutput('Error - token not returned correctly.', 400);
+});
+
+function generateOutput($data, $status = 200, $type = 'json')
 {
 	global $app;
-	echo json_encode($object);
 	$res = $app->response();
-	$res['Content-Type'] = 'application/json';
 	$res->status($status);
+	switch ($type)
+	{
+		case 'json':
+			echo json_encode($data);
+			$res['Content-Type'] = 'application/json';
+		break;
+		case 'html':
+		default:
+			echo $data;
+		break;
+	}
 }
 
 $app->run();
