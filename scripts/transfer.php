@@ -168,7 +168,8 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $config['endpoint']);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+curl_setopt($ch, CURLOPT_FAILONERROR, 0);
+curl_setopt($ch, CURLOPT_HTTP200ALIASES, array(202, 400, 413, 415));
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $config['connect_timeout']);
 foreach ($filedb->getAll() as $file)
 {
@@ -183,7 +184,8 @@ foreach ($filedb->getAll() as $file)
 	}
 	curl_setopt($ch, CURLOPT_POSTFIELDS, array('name' => $name, 'file' => '@' . $file));
 	$result = curl_exec($ch);
-	if ($result)
+	$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	if ($status_code === '202')
 	{
 		$logger->logMessage('success: ' . $name . ' at: ' . $file);
 		$filedb->remove($file);
@@ -191,7 +193,7 @@ foreach ($filedb->getAll() as $file)
 	}
 	else
 	{
-		$logger->logMessage('error: ' . $name . ' at: ' . $file);
+		$logger->logMessage('error: ' . $name . ' at: ' . $file . ' Error Message: ' . $result);
 	}
 }
 curl_close($ch);

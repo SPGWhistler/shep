@@ -37,28 +37,35 @@ $app->post('/add', function () use ($app) {
 				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				$fileType = finfo_file($finfo, $file['tmp_name']);
 				$serviceName = $list->isSupportedFileType($fileType);
-				if ($serviceName !== FALSE && move_uploaded_file($file['tmp_name'], $config['upload_path'] . basename($file['tmp_name'])))
+				if ($serviceName !== FALSE)
 				{
-					$file = array(
-						'path' => $config['upload_path'] . basename($file['tmp_name']),
-						'name' => $file['name'],
-						'size' => $file['size'],
-						'uploaded' => FALSE,
-						'service' => $serviceName,
-						'type' => $fileType,
-					);
-					if ($dao->addToQueue($file))
+					if (move_uploaded_file($file['tmp_name'], $config['upload_path'] . basename($file['tmp_name'])))
 					{
-						generateOutput("Accepted", 202);
+						$file = array(
+							'path' => $config['upload_path'] . basename($file['tmp_name']),
+							'name' => $file['name'],
+							'size' => $file['size'],
+							'uploaded' => FALSE,
+							'service' => $serviceName,
+							'type' => $fileType,
+						);
+						if ($dao->addToQueue($file))
+						{
+							generateOutput("Accepted", 202);
+						}
+						else
+						{
+							generateOutput("Error adding file to queue.", 400);
+						}
 					}
 					else
 					{
-						generateOutput("Error adding file to queue.", 400);
+						generateOutput("Error moving file.", 400);
 					}
 				}
 				else
 				{
-					generateOutput("Error moving file.", 400);
+					generateOutput("Unsupported file type: " . $fileType, 415);
 				}
 				break;
 			case UPLOAD_ERR_INI_SIZE:
