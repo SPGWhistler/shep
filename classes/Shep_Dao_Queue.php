@@ -1,7 +1,7 @@
 <?php
 class Shep_Dao_Queue
 {
-	private $collection = NULL;
+	private $queue = NULL;
 
 	public function __construct($config, $db)
 	{
@@ -13,7 +13,23 @@ class Shep_Dao_Queue
 	{
 		if ($this->collection === NULL)
 		{
-			$this->collection = $this->db->getCollection($this->config['collection_name']);
+			$this->db->getDatabase()->exec("CREATE TABLE IF NOT EXISTS '" . $this->config['collection_name'] . "' (
+				id INTEGER PRIMARY KEY,
+				path TEXT,
+				name TEXT,
+				size INTEGER,
+				uploaded INTEGER,
+				service TEXT,
+				type TEXT,
+				title TEXT,
+				description TEXT,
+				tags TEXT,
+				category TEXT,
+				public_allowed INTEGER,
+				friend_allowed INTEGER,
+				family_allowed INTEGER,
+				upload_token TEXT
+			)");
 		}
 		return $this->collection;
 	}
