@@ -12,6 +12,36 @@ require_once 'Zend/Loader.php';
 
 $app = new \Slim\Slim();
 
+$app->get('/test', function() use ($app){
+	$queue = new Shep_Queue();
+	d($queue->get());
+	d($queue->add(array(
+		'path' => '',
+		'name' => '',
+		'size' => '',
+		'uploaded' => '',
+		'service' => '',
+		'type' => '',
+	)));
+	d($queue->get());
+	/*
+	$item = new Shep_Item_Queue(array(
+		'path' => '',
+		'name' => '',
+		'size' => '',
+		'uploaded' => '',
+		'service' => '',
+		'type' => '',
+	));
+	d($item->isValid());
+	foreach ($item as $key=>$value)
+	{
+		d($key, $value);
+	}
+	dd($item);
+	*/
+});
+
 /**
  * Add a file.
  * This requires the following php.ini settings:
