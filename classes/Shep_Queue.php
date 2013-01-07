@@ -1,31 +1,42 @@
 <?php
 class Shep_Queue
 {
-	protected $items = array();
-	protected $_modified = TRUE;
+	protected $items = NULL;
 
-	public function add($properties = array())
+	protected function load()
+	{
+		if (!isset($this->items))
+		{
+		}
+	}
+
+	public function addItem($properties = array(), $save = TRUE)
 	{
 		$item = new Shep_Item_Queue($properties);
 		if ($item->isValid())
 		{
 			$this->items[] = $item;
+			if ($save)
+			{
+				$this->save();
+			}
 			return TRUE;
 		}
 		return FALSE;
 	}
 
-	public function get()
+	public function getItems()
 	{
 		$this->load();
 		return $this->items;
 	}
 
-	public function save()
+	public function getItem()
 	{
+		$this->load();
 	}
 
-	public function load()
+	public function save()
 	{
 	}
 }
