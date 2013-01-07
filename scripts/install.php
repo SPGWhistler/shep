@@ -14,7 +14,7 @@ $config_file_path = 'config/config.json';
 //Get command line options
 $options = getopt('i:a');
 
-fwrite(STDOUT, "This will create a new config.json file.\n\n");
+fwrite(STDOUT, "This script will create a new config.json file and other supporting files.\n\n");
 
 $import = array();
 if (isset($options['i']))
@@ -48,6 +48,7 @@ $config = array(
 		'file_path' => array(
 			'value' => "logs/db_file",
 			'desc' => "Path to the file database",
+			'supporting' => TRUE,
 		),
 	),
 	'txt_logger' => array(
@@ -131,10 +132,12 @@ $config = array(
 		'pid_path' => array(
 			'value' => "logs/transfer.pid",
 			'desc' => "Process id path",
+			'supporting' => TRUE,
 		),
 		'error_log_path' => array(
 			'value' => "logs/transfer_error_log",
 			'desc' => "Error log path",
+			'supporting' => TRUE,
 		),
 		'endpoint' => array(
 			'value' => "http://127.0.0.1/~tpetty/shep/index.php/add",
@@ -156,10 +159,12 @@ $config = array(
 		'pid_path' => array(
 			'value' => "logs/uploader.pid",
 			'desc' => "Process id path",
+			'supporting' => TRUE,
 		),
 		'error_log_path' => array(
 			'value' => "logs/uploader_error_log",
 			'desc' => "Error log path",
+			'supporting' => TRUE,
 		),
 	),
 );
@@ -180,15 +185,23 @@ if (strtolower(substr($answer, 0, 1)) === "y")
 }
 
 //Write New Config File
-fwrite(STDOUT, "Writing configuration file.\n");
-$config = json_encode($config);
-$res = file_put_contents($config_file_path, $config);
+fwrite(STDOUT, "\nWriting configuration file.\n");
+$config_json = json_encode($config);
+$res = file_put_contents($config_file_path, $config_json);
 if ($res === FALSE)
 {
 	fwrite(STDOUT, "Error - Could not write configuration file.\n");
 	exit(1);
 }
 fwrite(STDOUT, "Done.\n");
+
+//Create other supporting files
+fwrite(STDOUT, "\nCreating supporting files...\n");
+createSupportingFiles($config);
+fwrite(STDOUT, "Done.\n");
+
+
+fwrite(STDOUT, "\nAll Done.\n");
 exit(0);
 
 
@@ -266,5 +279,24 @@ function getConfig($config, $import)
 		fwrite(STDOUT, "Done.\n\n");
 	}
 	return $config;
+}
+
+function createSupportingFiles($config)
+{
+	foreach ($config as $group=>&$options)
+	{
+		foreach ($options as $option=>&$data)
+		{
+			if ($option === 'desc')
+			{
+				continue;
+			}
+			if (isset($data['supporting']))
+			{
+				fwrite(STDOUT, $data['value'] . "\n");
+				file_put_contents($data['value'], '', FILE_APPEND);
+			}
+		}
+	}
 }
 ?>
