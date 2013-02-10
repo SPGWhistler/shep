@@ -45,6 +45,7 @@ $app->post('/add', function () use ($app) {
 		switch ($file['error'])
 		{
 			case UPLOAD_ERR_OK: //No error
+				dd('finish up here');
 				$cfg = new Shep_Config();
 				$config = $cfg->get('add');
 				$queue = new Shep_Queue($cfg->get('queue'));
