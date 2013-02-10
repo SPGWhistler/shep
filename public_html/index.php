@@ -26,22 +26,6 @@ $app->get('/test', function() use ($app){
 	d($queue->getItems());
 	d($queue->removeItem('4'));
 	d($queue->getItems());
-	/*
-	$item = new Shep_Item_Queue(array(
-		'path' => '',
-		'name' => '',
-		'size' => '',
-		'uploaded' => '',
-		'service' => '',
-		'type' => '',
-	));
-	d($item->isValid());
-	foreach ($item as $key=>$value)
-	{
-		d($key, $value);
-	}
-	dd($item);
-	*/
 });
 
 /**
@@ -63,9 +47,8 @@ $app->post('/add', function () use ($app) {
 			case UPLOAD_ERR_OK: //No error
 				$cfg = new Shep_Config();
 				$config = $cfg->get('add');
-				$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
-				$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-				$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $dao);
+				$queue = new Shep_Queue($cfg->get('queue'));
+				$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $queue);
 				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				$fileType = finfo_file($finfo, $file['tmp_name']);
 				$serviceName = $list->isSupportedFileType($fileType);
@@ -81,7 +64,7 @@ $app->post('/add', function () use ($app) {
 							'service' => $serviceName,
 							'type' => $fileType,
 						);
-						if ($dao->addToQueue($file))
+						if ($queue->addToQueue($file))
 						{
 							generateOutput("Accepted", 202);
 						}
@@ -122,9 +105,8 @@ $app->post('/add', function () use ($app) {
 
 $app->get('/queue', function () use ($app) {
 	$cfg = new Shep_Config();
-	$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
-	$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-	generateOutput($dao->getQueue(), 200);
+	$queue = new Shep_Queue($cfg->get('queue'));
+	generateOutput($queue->getItems(), 200);
 });
 
 $app->get('/ytAuthStart', function() use ($app) {

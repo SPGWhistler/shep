@@ -1,4 +1,34 @@
 <?php
+/*
+ * This is an interface that is used below.
+ * This extends Iterator so that objects that
+ * extend it can be accessed via foreach loops.
+ * It also extends JsonSerializable so that the
+ * properties serialize to json correctly.
+ */
+interface Shep_Interface_Item extends Iterator, JsonSerializable
+{
+	public function __construct($properties = array());
+
+	public function __set($name, $value);
+
+	public function __get($name);
+
+	public function isValid();
+
+	public function rewind();
+
+	public function valid();
+
+	public function current();
+
+	public function key();
+
+	public function next();
+
+	public function jsonSerialize();
+}
+
 /**
  * A Shep Item Class.
  * This is an abstract class that gives a lot of
@@ -6,10 +36,8 @@
  * It allows each object to have a required array and an
  * optional array. Anything in required must not be NULL for
  * the isValid method to return TRUE.
- * This class implements Iterator so that objects that
- * extend it can be accessed via foreach loops.
  */
-abstract class Shep_Item implements Iterator
+abstract class Shep_Item implements Shep_Interface_Item
 {
 	protected $required = array();
 
@@ -83,6 +111,12 @@ abstract class Shep_Item implements Iterator
 	public function next()
 	{
 		return next($this->_all);
+	}
+
+	public function jsonSerialize()
+	{
+		$this->rewind();
+		return $this->_all;
 	}
 }
 ?>
