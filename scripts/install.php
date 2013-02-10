@@ -64,6 +64,13 @@ $config = array(
 			'desc' => "Date format to use",
 		),
 	),
+	'queue' => array(
+		'database_path' => array(
+			'value' => 'logs/queue.sqlite3',
+			'desc' => 'Path to sqlite queue database',
+			'supporting' => TRUE,
+		),
+	),
 	'dao_queue' => array(
 		'collection_name' => array(
 			'value' => "queue",
