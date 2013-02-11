@@ -50,7 +50,7 @@ class Shep_Service_Dao_Youtube extends Shep_Service_Dao
 			{
 				$fileObject['upload_id'] = $result;
 				$fileObject['uploaded'] = TRUE;
-				$this->dao->updateQueue($fileObject);
+				$this->queue->addItem($fileObject);
 				return TRUE;
 			}
 		}

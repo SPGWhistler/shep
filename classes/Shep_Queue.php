@@ -118,22 +118,29 @@ class Shep_Queue
 		return $this->items;
 	}
 
-	public function getItemIndex($id)
+	public function getItemByProperty($property, $value = NULL, $return_index = FALSE)
 	{
 		$this->load();
-		$found = NULL;
-		if (isset($id))
+		$output = FALSE;
+		if (isset($property) && $property !== '')
 		{
 			foreach ($this->items as $index=>$item)
 			{
-				if ($item->id === $id)
+				if (isset($item->$property) && $item->$property === $value)
 				{
-					$found = $index;
+					if ($return_index === TRUE)
+					{
+						$output = $index;
+					}
+					else
+					{
+						$output = $item;
+					}
 					break;
 				}
 			}
 		}
-		return $found;
+		return $output;
 	}
 
 	public function removeItem($id)
@@ -141,7 +148,7 @@ class Shep_Queue
 		$this->load();
 		if (isset($id))
 		{
-			if ($found = $this->getItemIndex($id) !== NULL)
+			if ($found = $this->getItemByProperty('id', $id, TRUE) !== FALSE)
 			{
 				$this->getDb()->exec("DELETE FROM queue WHERE id = '" . $id . "'");
 				unset($this->items[$found]);

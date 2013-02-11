@@ -3,10 +3,10 @@ abstract class Shep_Service_Dao
 {
 	protected $last_error = NULL;
 
-	public function __construct($config, $dao)
+	public function __construct($config, $queue)
 	{
 		$this->config = $config;
-		$this->dao = $dao;
+		$this->queue = $queue;
 	}
 
 	abstract public function uploadFile($fileObject);

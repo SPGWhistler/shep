@@ -14,6 +14,8 @@ interface Shep_Interface_Item extends Iterator, JsonSerializable
 
 	public function __get($name);
 
+	public function __isset($name);
+
 	public function isValid();
 
 	public function rewind();
@@ -74,6 +76,11 @@ abstract class Shep_Item implements Shep_Interface_Item
 			return $this->optional[$name];
 		}
 		return NULL;
+	}
+
+	public function __isset($name)
+	{
+		return isset($this->required[$name]) || isset($this->optional[$name]);
 	}
 
 	public function isValid()

@@ -16,22 +16,21 @@ require_once 'Zend/Loader.php';
 
 //Initialize objects
 $cfg = new Shep_Config();
-$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
-$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $dao);
+$queue = new Shep_Queue($cfg->get('queue'));
+$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $queue);
 
 $addcfg = $cfg->get('add');
 
-$queue = $dao->getQueue();
-echo "The queue currently has " . count($queue) . " files in it.\n";
+$items = $queue->getItems();
+echo "The queue currently has " . count($items) . " files in it.\n";
 
 $count = 0;
-foreach ($queue as $key=>$file)
+foreach ($items as $item)
 {
-	if (!isset($file['path']) || !file_exists($file['path']))
+	if (!isset($item->path) || !file_exists($item->path))
 	{
 		//File doesnt exist or has no path - remove from queue.
-		$dao->removeFromQueue($file);
+		$queue->removeItem($item->id);
 		$count++;
 	}
 }
@@ -45,7 +44,7 @@ if (is_array($files))
 {
 	foreach ($files as $file)
 	{
-		if ($dao->getQueue(array('path' => $file)) === array())
+		if ($queue->getItemByProperty('path', $file) === FALSE)
 		{
 			//File exists but is not in queue.
 			$fileType = finfo_file($finfo, $file);
@@ -60,7 +59,7 @@ if (is_array($files))
 					'service' => $serviceName,
 					'type' => $fileType,
 				);
-				$dao->addToQueue($fileObject);
+				$queue->addItem($fileObject);
 				$count++;
 			}
 			else
@@ -75,8 +74,8 @@ if (is_array($files))
 	echo $count . " files added to queue.\n";
 }
 
-$queue = $dao->getQueue();
-echo "The queue now has " . count($queue) . " files in it.\n";
+$items = $queue->getItems();
+echo "The queue now has " . count($items) . " files in it.\n";
 
 if (count($unsupported_files))
 {

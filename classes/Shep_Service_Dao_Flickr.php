@@ -37,7 +37,7 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 			{
 				$fileObject['upload_token'] = $result;
 				$fileObject['uploaded'] = TRUE;
-				$this->dao->updateQueue($fileObject);
+				$this->queue->updateQueue($fileObject);
 				return TRUE;
 			}
 			else

@@ -4,11 +4,11 @@ class Shep_Service_List
 	protected $types = NULL;
 	protected $services = array();
 
-	public function __construct($config, $cfg, $dao)
+	public function __construct($config, $cfg, $queue)
 	{
 		$this->config = $config;
 		$this->cfg = $cfg;
-		$this->dao = $dao;
+		$this->queue = $queue;
 	}
 
 	public function isSupportedFileType($fileType = '')
@@ -43,7 +43,7 @@ class Shep_Service_List
 		if (!isset($this->services[$service]))
 		{
 			$config_key = strtolower(substr($service, 5));
-			$this->services[$service] = new $service($this->cfg->get($config_key), $this->dao);
+			$this->services[$service] = new $service($this->cfg->get($config_key), $this->queue);
 		}
 		return $this->services[$service];
 	}
