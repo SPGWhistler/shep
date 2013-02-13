@@ -28,9 +28,8 @@ if (!flock($lock, LOCK_EX | LOCK_NB)) {
 
 //Initialize objects
 $logger = new Shep_Txt_Logger($cfg->get('txt_logger'), SHEP_BASE_PATH . $config['error_log_path']);
-$db = new Shep_Db_Mongo($cfg->get('db_mongo'));
-$dao = new Shep_Dao_Queue($cfg->get('dao_queue'), $db);
-$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $dao);
+$queue = new Shep_Queue($cfg->get('queue'));
+$list = new Shep_Service_List($cfg->get('service_list'), $cfg, $queue);
 
 //Set timezone
 if ($config['timezone'] !== "PHP")
@@ -78,22 +77,20 @@ if (!isset($options['D']))
 }
 
 //Loop through queue now and upload files to each service.
-$queue = $dao->getQueue();
-foreach ($queue as $id=>$file)
+$items = $queue->getItems();
+foreach ($items as $file)
 {
-	if (isset($file['path']) &&
-		file_exists($file['path']) &&
-		(!isset($file['uploaded']) || $file['uploaded'] === FALSE))
+	if (file_exists($file->path) && $file->uploaded !== "1")
 	{
-		$logger->logMessage('starting upload of ' . $file['name'] . ' (' . $id . ')');
-		$service = $list->getService($file['service']);
+		$logger->logMessage('starting upload of ' . $file->name . ' (' . $file->id . ')');
+		$service = $list->getService($file->service);
 		if ($service->uploadFile($file))
 		{
-			$logger->logMessage('finished upload of ' . $file['name'] . ' (' . $id . ')');
+			$logger->logMessage('finished upload of ' . $file->name . ' (' . $file->id . ')');
 		}
 		else
 		{
-			$logger->logMessage('error uploading ' . $file['name'] . ' (' . $id . ') Message: ' . $service->getLastError());
+			$logger->logMessage('error uploading ' . $file->name . ' (' . $file->id . ') Message: ' . $service->getLastError());
 		}
 	}
 }

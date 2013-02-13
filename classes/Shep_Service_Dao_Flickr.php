@@ -15,29 +15,23 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 
 	public function uploadFile($fileObject)
 	{
-		if (isset($fileObject['path']) && file_exists($fileObject['path']))
+		if (file_exists($fileObject->path))
 		{
-			$fileObject['name'] = (isset($fileObject['name'])) ? $fileObject['name'] : NULL;
-			$fileObject['title'] = (isset($fileObject['title'])) ? $fileObject['title'] : $fileObject['name'];
-			$fileObject['description'] = (isset($fileObject['description'])) ? $fileObject['description'] : NULL;
-			$fileObject['tags'] = (isset($fileObject['tags'])) ? $fileObject['tags'] : NULL;
-			$fileObject['public_allowed'] = (isset($fileObject['public_allowed'])) ? $fileObject['public_allowed'] : $this->config['public_allowed'];
-			$fileObject['friend_allowed'] = (isset($fileObject['friend_allowed'])) ? $fileObject['friend_allowed'] : $this->config['friend_allowed'];
-			$fileObject['family_allowed'] = (isset($fileObject['family_allowed'])) ? $fileObject['family_allowed'] : $this->config['family_allowed'];
+			$fileObject->title = (isset($fileObject->title)) ? $fileObject->title : $fileObject->name;
 			$result = $this->getFlickr()->async_upload(
-				$fileObject['path'],
-				$fileObject['title'],
-				$fileObject['description'],
-				$fileObject['tags'],
-				$fileObject['public_allowed'],
-				$fileObject['friend_allowed'],
-				$fileObject['family_allowed']
+				$fileObject->path,
+				$fileObject->title,
+				$fileObject->description,
+				$fileObject->tags,
+				$fileObject->public_allowed,
+				$fileObject->friend_allowed,
+				$fileObject->family_allowed
 			);
 			if ($result !== FALSE)
 			{
-				$fileObject['upload_token'] = $result;
-				$fileObject['uploaded'] = TRUE;
-				$this->queue->updateQueue($fileObject);
+				$fileObject->upload_token = $result;
+				$fileObject->uploaded = 1;
+				$this->queue->addItem($fileObject);
 				return TRUE;
 			}
 			else
