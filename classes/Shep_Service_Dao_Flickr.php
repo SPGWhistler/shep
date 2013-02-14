@@ -53,6 +53,8 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 	public function isUploaded($fileObject)
 	{
 		$exif = exif_read_data($fileObject->path);
+		$date_time = strtotime($exif['DateTime']);
+		print_r($this->getFlickr()->photos_search(array('min_taken_date' => $date_time, 'max_taken_date' => $date_time)));
 		/*
 		foreach ($exif as $key=>$value)
 		{
