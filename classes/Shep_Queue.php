@@ -49,10 +49,10 @@ class Shep_Queue
 		}
 	}
 
-	public function addItem($properties = array())
+	public function addItem($properties)
 	{
 		$this->load();
-		$item = new Shep_Item_Queue($properties);
+		$item = (is_array($properties)) ? new Shep_Item_Queue($properties) : $properties;
 		if ($item->isValid())
 		{
 			$insert_sql = "INSERT OR REPLACE INTO queue (

@@ -15,17 +15,7 @@ $app = new \Slim\Slim();
 $app->get('/test', function() use ($app){
 	$cfg = new Shep_Config();
 	$queue = new Shep_Queue($cfg->get('queue'));
-	$queue->addItem(array(
-		'path' => 'path here',
-		'name' => 'name here',
-		'size' => 'size here',
-		'uploaded' => 'uploaded here',
-		'service' => 'service here',
-		'type' => 'type here',
-	));
-	d($queue->getItems());
-	d($queue->removeItem('4'));
-	d($queue->getItems());
+	d($queue->removeItem('1'));
 });
 
 /**

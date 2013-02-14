@@ -51,14 +51,21 @@ if (is_array($files))
 			$serviceName = $list->isSupportedFileType($fileType);
 			if ($serviceName !== FALSE)
 			{
-				$fileObject = array(
+				$service = $list->getService($serviceName);
+				$fileObject = new Shep_Item_Queue(array(
 					'path' => $file,
 					'name' => basename($file),
 					'size' => filesize($file),
-					'uploaded' => FALSE, //@TODO Should actually run a search via service.
+					'uploaded' => 0,
 					'service' => $serviceName,
 					'type' => $fileType,
-				);
+				));
+				//@TODO I need to figure out the right file name?
+				if ($service->isUploaded($fileObject))
+				{
+					$fileObject->uploaded = 1;
+				}
+				exit;
 				$queue->addItem($fileObject);
 				$count++;
 			}

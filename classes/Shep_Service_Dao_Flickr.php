@@ -52,6 +52,18 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 
 	public function isUploaded($fileObject)
 	{
+		$exif = exif_read_data($fileObject->path);
+		/*
+		foreach ($exif as $key=>$value)
+		{
+			echo $key . " ";
+			if (strtolower(substr(trim(fgets(STDIN)), 0, 1)) === "")
+			{
+				print_r($value);
+				echo "\n";
+			}
+		}
+		*/
 	}
 
 	public static function getSupportedFileTypes()
