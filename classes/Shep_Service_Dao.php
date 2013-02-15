@@ -13,7 +13,7 @@ abstract class Shep_Service_Dao
 
 	abstract public function checkUploadStatus($fileObject);
 
-	abstract public function isUploaded($fileObject);
+	abstract public function findFile($fileObject);
 
 	abstract public static function getSupportedFileTypes();
 

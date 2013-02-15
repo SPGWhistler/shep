@@ -58,7 +58,7 @@ class Shep_Service_Dao_Youtube extends Shep_Service_Dao
 	{
 	}
 
-	public function isUploaded($fileObject)
+	public function findFile($fileObject)
 	{
 	}
 

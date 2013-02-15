@@ -50,22 +50,34 @@ class Shep_Service_Dao_Flickr extends Shep_Service_Dao
 		*/
 	}
 
-	public function isUploaded($fileObject)
+	public function findFile($fileObject)
 	{
 		$exif = exif_read_data($fileObject->path);
-		$date_time = strtotime($exif['DateTime']);
-		print_r($this->getFlickr()->photos_search(array('min_taken_date' => $date_time, 'max_taken_date' => $date_time)));
-		/*
-		foreach ($exif as $key=>$value)
+		if (is_array($exif) && isset($exif['DateTime']))
 		{
-			echo $key . " ";
-			if (strtolower(substr(trim(fgets(STDIN)), 0, 1)) === "")
+			$date_time = date('Y-m-d H:i:s', strtotime($exif['DateTime']));
+			$result = $this->getFlickr()->photos_search(array('user_id' => 'me', 'min_taken_date' => $date_time, 'max_taken_date' => $date_time));
+			if (is_array($result['photo']) && count($result['photo']))
 			{
-				print_r($value);
-				echo "\n";
+				$fileObject->title = $result['photo'][0]['title'];
+				$fileObject->upload_token = $result['photo'][0]['id'];
+				$fileObject->public_allowed = $result['photo'][0]['ispublic'];
+				$fileObject->friend_allowed = $result['photo'][0]['isfriend'];
+				$fileObject->family_allowed = $result['photo'][0]['isfamily'];
+				$fileObject->uploaded = 1;
+				if (count($result['photo']) > 1)
+				{
+					$duplicates = $fileObject->possible_uploaded_duplicates || array();
+					foreach ($result['photo'] as $photo)
+					{
+						$duplicates[] = $photo['id'];
+					}
+					$fileObject->possible_uploaded_duplicates = $duplicates;
+				}
+				return $fileObject;
 			}
 		}
-		*/
+		return FALSE;
 	}
 
 	public static function getSupportedFileTypes()

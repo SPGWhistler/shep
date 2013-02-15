@@ -39,11 +39,13 @@ class Shep_Queue
 				public_allowed INTEGER,
 				friend_allowed INTEGER,
 				family_allowed INTEGER,
-				upload_token TEXT
+				upload_token TEXT,
+				possible_uploaded_duplicates TEXT
 			)");
 			$result = $this->getDb()->query('SELECT * FROM queue', PDO::FETCH_CLASS, 'Shep_Item_Queue');
 			foreach ($result as $item)
 			{
+				$item->possible_uploaded_duplicates = unserialize($item->possible_uploaded_duplicates);
 				$this->items[] = $item;
 			}
 		}
@@ -70,7 +72,8 @@ class Shep_Queue
 				public_allowed,
 				friend_allowed,
 				family_allowed,
-				upload_token
+				upload_token,
+				possible_uploaded_duplicates
 			) VALUES (
 				:id,
 				:path,
@@ -86,7 +89,8 @@ class Shep_Queue
 				:public_allowed,
 				:friend_allowed,
 				:family_allowed,
-				:upload_token
+				:upload_token,
+				:possible_uploaded_duplicates
 			)";
 			$insert_stmt = $this->getDb()->prepare($insert_sql);
 			$insert_stmt->bindValue(':id', $item->id);
@@ -104,6 +108,7 @@ class Shep_Queue
 			$insert_stmt->bindValue(':friend_allowed', $item->friend_allowed);
 			$insert_stmt->bindValue(':family_allowed', $item->family_allowed);
 			$insert_stmt->bindValue(':upload_token', $item->upload_token);
+			$insert_stmt->bindValue(':possible_uploaded_duplicates', serialize($item->possible_uploaded_duplicates));
 			$insert_stmt->execute();
 			$item->id = $this->getDb()->lastInsertId();
 			$this->items[] = $item;

@@ -60,12 +60,16 @@ if (is_array($files))
 					'service' => $serviceName,
 					'type' => $fileType,
 				));
-				//@TODO I need to figure out the right file name?
-				if ($service->isUploaded($fileObject))
+				echo "Is " . $fileObject->name . " uploaded already? Checking... ";
+				if ($newObject = $service->findFile($fileObject))
 				{
-					$fileObject->uploaded = 1;
+					echo "Yes.\n";
+					$fileObject = $newObject;
 				}
-				exit;
+				else
+				{
+					echo "No.\n";
+				}
 				$queue->addItem($fileObject);
 				$count++;
 			}

@@ -15,7 +15,7 @@ $app = new \Slim\Slim();
 $app->get('/test', function() use ($app){
 	$cfg = new Shep_Config();
 	$queue = new Shep_Queue($cfg->get('queue'));
-	d($queue->removeItem('1'));
+	d($queue->removeItems());
 });
 
 /**
@@ -97,6 +97,12 @@ $app->get('/queue', function () use ($app) {
 	$cfg = new Shep_Config();
 	$queue = new Shep_Queue($cfg->get('queue'));
 	generateOutput($queue->getItems(), 200);
+});
+
+$app->delete('/queue', function() use ($app){
+	$cfg = new Shep_Config();
+	$queue = new Shep_Queue($cfg->get('queue'));
+	generateOutput($queue->removeItems(), 200);
 });
 
 $app->get('/ytAuthStart', function() use ($app) {
