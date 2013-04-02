@@ -78,6 +78,15 @@ if (!isset($options['D']))
 
 //Loop through queue now and upload files to each service.
 $items = $queue->getItems();
+$total_to_upload = 0;
+foreach ($items as $file)
+{
+	if (file_exists($file->path) && $file->uploaded !== "1")
+	{
+		$total_to_upload++;
+	}
+}
+$logger->logMessage('found ' . $total_to_upload . ' items to upload.');
 foreach ($items as $file)
 {
 	if (file_exists($file->path) && $file->uploaded !== "1")

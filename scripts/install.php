@@ -1,7 +1,7 @@
 <?php
-//@TODO Add code in here to setup the composer dependencies.
-//php composer.phar install
-//Also create the symlnk in public_html to the shep/public_html directory.
+//@TODO Add code in here to setup the composer dependencies: php composer.phar install
+//@TODO Add cron setup to this script? (tranfer, upload)
+//@TODO Also create the symlnk in public_html to the shep/public_html directory.
 /*
  * Install Cli Script
  * This generates a json config file so the application can run.
